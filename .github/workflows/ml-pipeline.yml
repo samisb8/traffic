@@ -1,0 +1,233 @@
+name: ML Pipeline
+
+on:
+  schedule:
+    - cron: '0 2 * * 1'  # Every Monday at 2 AM
+  workflow_dispatch:      # Manual trigger
+    inputs:
+      force_retrain:
+        description: 'Force model retraining'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  data-validation:
+    runs-on: ubuntu-latest
+    
+    outputs:
+      data-quality: ${{ steps.validate.outputs.quality-score }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+    
+    - name: Validate data quality
+      id: validate
+      run: |
+        python -c "
+        import pandas as pd
+        import numpy as np
+        from mlops.train import generate_synthetic_data
+        
+        # Generate/load data
+        df = generate_synthetic_data()
+        
+        # Quality checks
+        missing_pct = df.isnull().sum().sum() / (len(df) * len(df.columns))
+        duplicates_pct = df.duplicated().sum() / len(df)
+        
+        quality_score = 1.0 - missing_pct - duplicates_pct
+        
+        print(f'Data quality score: {quality_score:.3f}')
+        print(f'Missing values: {missing_pct:.3f}')
+        print(f'Duplicates: {duplicates_pct:.3f}')
+        
+        # Set output
+        print(f'::set-output name=quality-score::{quality_score:.3f}')
+        
+        # Fail if quality too low
+        assert quality_score > 0.8, f'Data quality too low: {quality_score:.3f}'
+        print('✅ Data validation passed')
+        "
+    
+    - name: Check data drift
+      run: |
+        python mlops/monitor.py
+        echo "✅ Data drift check completed"
+
+  model-training:
+    needs: data-validation
+    runs-on: ubuntu-latest
+    if: needs.data-validation.outputs.data-quality > '0.8'
+    
+    outputs:
+      model-performance: ${{ steps.train.outputs.accuracy }}
+      should-deploy: ${{ steps.compare.outputs.deploy }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+    
+    - name: Train new model
+      id: train
+      run: |
+        python mlops/train.py --production
+        
+        # Extract metrics
+        python -c "
+        import json
+        with open('data/model_metrics.json') as f:
+            metrics = json.load(f)
+        accuracy = metrics['accuracy']
+        print(f'::set-output name=accuracy::{accuracy:.4f}')
+        print(f'New model accuracy: {accuracy:.4f}')
+        "
+    
+    - name: Compare with production model
+      id: compare
+      run: |
+        python -c "
+        import json
+        from pathlib import Path
+        
+        # Load new model metrics
+        with open('data/model_metrics.json') as f:
+            new_metrics = json.load(f)
+        
+        new_accuracy = new_metrics['accuracy']
+        
+        # Load production metrics if exists
+        prod_metrics_path = Path('data/model_production_metrics.json')
+        if prod_metrics_path.exists():
+            with open(prod_metrics_path) as f:
+                prod_metrics = json.load(f)
+            prod_accuracy = prod_metrics['accuracy']
+            
+            improvement = new_accuracy - prod_accuracy
+            should_deploy = improvement > 0.01  # 1% improvement threshold
+            
+            print(f'Production accuracy: {prod_accuracy:.4f}')
+            print(f'New accuracy: {new_accuracy:.4f}')
+            print(f'Improvement: {improvement:.4f}')
+        else:
+            should_deploy = True
+            print('No production model found, will deploy new model')
+        
+        print(f'::set-output name=deploy::{str(should_deploy).lower()}')
+        print(f'Should deploy: {should_deploy}')
+        "
+    
+    - name: Upload model artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: trained-model
+        path: |
+          data/model.pkl
+          data/model_metrics.json
+
+  model-deployment:
+    needs: [data-validation, model-training]
+    runs-on: ubuntu-latest
+    if: needs.model-training.outputs.should-deploy == 'true'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Download model artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: trained-model
+        path: data/
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+    
+    - name: Deploy model
+      run: |
+        python mlops/deploy.py
+        echo "✅ Model deployment completed"
+    
+    - name: Update production metrics
+      run: |
+        cp data/model_metrics.json data/model_production_metrics.json
+        echo "✅ Production metrics updated"
+    
+    - name: Notify deployment
+      run: |
+        echo "🎉 New model deployed!"
+        echo "Performance: ${{ needs.model-training.outputs.model-performance }}"
+        echo "Data quality: ${{ needs.data-validation.outputs.data-quality }}"
+
+  monitoring:
+    needs: [data-validation, model-training]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+    
+    - name: Generate monitoring report
+      run: |
+        python mlops/monitor.py
+        echo "✅ Monitoring report generated"
+    
+    - name: Upload monitoring report
+      uses: actions/upload-artifact@v3
+      with:
+        name: monitoring-report
+        path: data/monitoring_report.json
+    
+    - name: Check alerts
+      run: |
+        python -c "
+        import json
+        
+        with open('data/monitoring_report.json') as f:
+            report = json.load(f)
+        
+        # Check for alerts
+        drift_status = report['data_drift']['status']
+        recommendations = report['recommendations']
+        
+        if drift_status == 'alert':
+            print('🚨 ALERT: Data drift detected!')
+        
+        print('📋 Recommendations:')
+        for rec in recommendations:
+            print(f'  {rec}')

@@ -1,0 +1,141 @@
+name: CD Pipeline
+
+on:
+  workflow_run:
+    workflows: ["CI Pipeline"]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+    
+    - name: Pre-deployment validation
+      run: |
+        # Validate model exists
+        python mlops/train.py --test-mode
+        echo "✅ Pre-deployment validation passed"
+    
+    - name: Deploy to staging
+      run: |
+        echo "🚀 Deploying to staging environment..."
+        
+        # Create staging docker-compose
+        cat > docker-compose.staging.yml << 'EOF'
+        version: '3.8'
+        services:
+          api-staging:
+            build: .
+            ports:
+              - "8010:8000"
+            environment:
+              - ENV=staging
+            volumes:
+              - ./data:/app/data
+          
+          streamlit-staging:
+            build:
+              context: .
+              dockerfile: Dockerfile.streamlit
+            ports:
+              - "8511:8501"
+            depends_on:
+              - api-staging
+            environment:
+              - API_URL=http://api-staging:8000
+        EOF
+        
+        # Start staging
+        docker-compose -f docker-compose.staging.yml up -d
+        echo "✅ Staging deployment completed"
+    
+    - name: Health check staging
+      run: |
+        echo "🏥 Running health checks..."
+        sleep 30
+        
+        # Health check API
+        for i in {1..5}; do
+          if curl -f http://localhost:8010/health; then
+            echo "✅ API staging healthy"
+            break
+          fi
+          echo "⏳ Waiting for API... ($i/5)"
+          sleep 10
+        done
+        
+        # Check Streamlit
+        curl -f http://localhost:8511 || echo "⚠️ Streamlit staging check failed"
+    
+    - name: Run integration tests
+      run: |
+        echo "🧪 Running integration tests..."
+        
+        python -c "
+        import requests
+        import time
+        
+        # Test API endpoints
+        base_url = 'http://localhost:8010'
+        
+        # Test health
+        r = requests.get(f'{base_url}/health')
+        assert r.status_code == 200, 'Health check failed'
+        
+        # Test predictions
+        r = requests.get(f'{base_url}/predict')
+        assert r.status_code == 200, 'Predictions failed'
+        data = r.json()
+        assert 'predictions' in data, 'No predictions in response'
+        
+        # Test metrics
+        r = requests.get(f'{base_url}/metrics')
+        assert r.status_code == 200, 'Metrics failed'
+        
+        print('✅ Integration tests passed')
+        "
+    
+    - name: Deploy to production
+      if: success()
+      run: |
+        echo "🚀 Deploying to production..."
+        
+        # Stop staging
+        docker-compose -f docker-compose.staging.yml down
+        
+        # Deploy production
+        docker-compose down || true
+        docker-compose up -d
+        
+        echo "✅ Production deployment completed"
+    
+    - name: Post-deployment verification
+      run: |
+        echo "🔍 Post-deployment verification..."
+        sleep 20
+        
+        # Verify production health
+        curl -f http://localhost:8000/health || exit 1
+        curl -f http://localhost:8501 || echo "⚠️ Streamlit verification failed"
+        
+        echo "✅ Deployment verification passed"
+    
+    - name: Cleanup
+      if: always()
+      run: |
+        docker-compose -f docker-compose.staging.yml down || true
+        docker system prune -f
