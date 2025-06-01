@@ -1,0 +1,11 @@
+[
+  {
+    "deployment_time": "2025-06-01T17:25:23.236400",
+    "model_type": "RandomForestRegressor",
+    "accuracy": 0.9508,
+    "mae": 0.0492,
+    "r2_score": 0.9557,
+    "mlflow_logged": true,
+    "previous_accuracy": 0.9508
+  }
+]

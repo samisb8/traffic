@@ -8,6 +8,8 @@ import json
 from pathlib import Path
 import argparse
 from datetime import datetime, timedelta
+import mlflow
+import mlflow.sklearn
 
 def load_data():
     """Charge ou génère données de trafic"""
@@ -210,9 +212,20 @@ def generate_casablanca_traffic_data():
     
     return model_df
 
+def cleanup_mlflow_runs():
+    """Nettoie tous les runs MLflow ouverts"""
+    try:
+        while mlflow.active_run():
+            mlflow.end_run()
+    except Exception:
+        pass
+
 def train_model(test_mode=False):
     """Entraîne le modèle de prédiction trafic"""
     print("🤖 Début entraînement modèle...")
+    
+    # Nettoyage MLflow
+    cleanup_mlflow_runs()
     
     # Chargement données
     df = load_data()
@@ -326,6 +339,81 @@ def train_model(test_mode=False):
     print(f"\n💾 Modèle sauvé: {model_path}")
     print(f"📋 Métriques sauvées: data/model_metrics.json")
     
+    # ========== AJOUT MLFLOW TRACKING ==========
+    try:
+        print("📊 Enregistrement dans MLflow...")
+        
+        # Configuration MLflow
+        mlflow.set_experiment("Traffic_Prediction")
+        
+        with mlflow.start_run(run_name=f"training_{datetime.now().strftime('%Y%m%d_%H%M%S')}"):
+            # Log des paramètres du modèle
+            if test_mode:
+                mlflow.log_params({
+                    "n_estimators": 50,
+                    "max_depth": 10,
+                    "mode": "test",
+                    "random_state": 42
+                })
+            else:
+                mlflow.log_params({
+                    "n_estimators": 200,
+                    "max_depth": 15,
+                    "min_samples_split": 5,
+                    "min_samples_leaf": 2,
+                    "mode": "production",
+                    "random_state": 42
+                })
+            
+            # Log des paramètres généraux
+            mlflow.log_params({
+                "model_type": "RandomForestRegressor",
+                "location": "Casablanca, Morocco",
+                "n_samples": len(df),
+                "n_features": len(features),
+                "zones_count": 6,
+                "test_size": 0.2,
+                "stratified": True
+            })
+            
+            # Log de TOUTES les métriques
+            mlflow.log_metrics({
+                "accuracy_train": accuracy_train,
+                "accuracy_test": accuracy_test,
+                "accuracy": accuracy_test,  # Métrique principale
+                "mae_train": mae_train,
+                "mae_test": mae_test,
+                "mae": mae_test,
+                "r2_train": r2_train,
+                "r2_test": r2_test,
+                "r2_score": r2_test,
+                "overfitting_score": r2_train - r2_test
+            })
+            
+            # Log importance des features
+            for feature, importance in feature_importance.items():
+                mlflow.log_metric(f"feature_importance_{feature}", importance)
+            
+            # Log du modèle sklearn
+            mlflow.sklearn.log_model(
+                model,
+                "traffic_model",
+                registered_model_name="CasablancaTrafficModel"
+            )
+            
+            # Log des artefacts
+            mlflow.log_artifact("data/model_metrics.json")
+            if Path("data/traffic_data.csv").exists():
+                mlflow.log_artifact("data/traffic_data.csv")
+            if Path("data/casablanca_full_data.csv").exists():
+                mlflow.log_artifact("data/casablanca_full_data.csv")
+            
+            print("✅ Modèle enregistré dans MLflow")
+            
+    except Exception as e:
+        print(f"⚠️ Erreur MLflow (non bloquante): {e}")
+        print("💾 Modèle sauvé localement quand même")
+    
     return metrics
 
 if __name__ == "__main__":
@@ -339,11 +427,19 @@ if __name__ == "__main__":
         print("🔄 Régénération forcée des données...")
         df = generate_casablanca_traffic_data()
     
+    # Configuration MLflow
+    try:
+        mlflow.set_experiment("Traffic_Prediction")
+        print("✅ Expérience MLflow configurée")
+    except Exception as e:
+        print(f"⚠️ MLflow non disponible: {e}")
+    
     # Entraînement
     try:
         metrics = train_model(test_mode=args.test_mode)
         print("\n🎉 Entraînement terminé avec succès!")
         print(f"🏆 Performance finale: {metrics['accuracy']:.1%}")
+        print("📊 Vérifiez MLflow: http://localhost:5001")
     except Exception as e:
         print(f"\n💥 Erreur lors de l'entraînement: {e}")
         print("🆘 Essayez: python mlops/train.py --regenerate")

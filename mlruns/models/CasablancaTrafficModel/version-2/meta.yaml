@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1748794426647
+current_stage: None
+description: null
+last_updated_timestamp: 1748794426647
+name: CasablancaTrafficModel
+run_id: 28c571f7f90e4624b0c3924b24143622
+run_link: null
+source: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/878293477145898029/28c571f7f90e4624b0c3924b24143622/artifacts/traffic_model
+status: READY
+status_message: null
+storage_location: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/878293477145898029/28c571f7f90e4624b0c3924b24143622/artifacts/traffic_model
+user_id: null
+version: 2

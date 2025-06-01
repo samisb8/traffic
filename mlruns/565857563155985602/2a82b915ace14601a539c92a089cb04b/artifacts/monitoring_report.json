@@ -1,0 +1,36 @@
+{
+  "timestamp": "2025-06-01T16:56:42.121937",
+  "data_drift": {
+    "drift_score": 8.7294,
+    "feature_drifts": {
+      "hour": 0.0122,
+      "day_of_week": 0.0352,
+      "weather_score": 0.4684,
+      "event_impact": 34.402
+    },
+    "status": "alert",
+    "threshold": 0.1,
+    "timestamp": "2025-06-01T16:56:42.106738"
+  },
+  "model_performance": {
+    "model_metrics": {
+      "accuracy": 0.884,
+      "mae": 0.114,
+      "r2_score": 0.913
+    },
+    "system_metrics": {
+      "uptime_seconds": 17344.9,
+      "total_requests": 0,
+      "avg_latency_ms": 119,
+      "requests_per_minute": 0.0
+    },
+    "data_quality": {
+      "drift_score": 0.126,
+      "missing_values": 0,
+      "outliers_detected": 2
+    }
+  },
+  "recommendations": [
+    "\ud83d\udd04 Re-entra\u00eenement recommand\u00e9 (drift d\u00e9tect\u00e9)"
+  ]
+}

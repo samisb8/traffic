@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/565857563155985602/5ce6c7e25fb34d2b9d7125b47e0901cb/artifacts
+end_time: 1748792086717
+entry_point_name: ''
+experiment_id: '565857563155985602'
+lifecycle_stage: active
+run_id: 5ce6c7e25fb34d2b9d7125b47e0901cb
+run_name: monitoring_report_20250601_163446
+run_uuid: 5ce6c7e25fb34d2b9d7125b47e0901cb
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1748792086634
+status: 4
+tags: []
+user_id: USER

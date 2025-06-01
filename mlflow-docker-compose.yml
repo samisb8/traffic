@@ -1,0 +1,56 @@
+services:
+  mlflow:
+    image: python:3.9-slim
+    container_name: casablanca-mlflow
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./mlflow-artifacts:/app/mlflow-artifacts
+      - ./mlflow.db:/app/mlflow.db
+      - ./mlruns:/app/mlruns
+    working_dir: /app
+    environment:
+      - MLFLOW_BACKEND_STORE_URI=sqlite:///app/mlflow.db
+      - MLFLOW_DEFAULT_ARTIFACT_ROOT=/app/mlflow-artifacts
+      - MLFLOW_HOST=0.0.0.0
+      - MLFLOW_PORT=5000
+    command: >
+      bash -c "
+        pip install mlflow[extras]==2.8.1 && 
+        mlflow server 
+        --host 0.0.0.0 
+        --port 5000 
+        --backend-store-uri sqlite:///app/mlflow.db 
+        --default-artifact-root /app/mlflow-artifacts 
+        --serve-artifacts
+      "
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Service optionnel: Base de données PostgreSQL pour MLflow
+  mlflow-db:
+    image: postgres:13
+    container_name: casablanca-mlflow-db
+    environment:
+      - POSTGRES_DB=mlflow
+      - POSTGRES_USER=mlflow
+      - POSTGRES_PASSWORD=mlflow_password
+    volumes:
+      - mlflow_postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    profiles:
+      - postgres  # Utiliser avec: docker-compose --profile postgres up
+
+volumes:
+  mlflow_postgres_data:
+
+networks:
+  default:
+    name: casablanca-traffic-network

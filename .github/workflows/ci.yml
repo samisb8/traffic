@@ -74,9 +74,9 @@ jobs:
         import pandas as pd
         import numpy as np
         from pathlib import Path
+        from mlops.train import generate_casablanca_traffic_data
         
         # Test data generation
-        from mlops.train import generate_synthetic_data
         df = generate_casablanca_traffic_data()
         assert len(df) > 0, 'No data generated'
         assert 'traffic_level' in df.columns, 'Missing target column'

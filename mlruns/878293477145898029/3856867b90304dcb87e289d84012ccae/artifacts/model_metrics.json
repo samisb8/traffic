@@ -1,0 +1,30 @@
+{
+  "mae_train": 0.0319,
+  "mae_test": 0.0492,
+  "r2_train": 0.9825,
+  "r2_test": 0.9557,
+  "accuracy_train": 0.9681,
+  "accuracy_test": 0.9508,
+  "accuracy": 0.9508,
+  "mae": 0.0492,
+  "r2_score": 0.9557,
+  "n_samples": 8640,
+  "n_features": 5,
+  "features": [
+    "hour",
+    "day_of_week",
+    "weather_score",
+    "event_impact",
+    "historical_avg"
+  ],
+  "feature_importance": {
+    "hour": 0.6073,
+    "day_of_week": 0.0057,
+    "weather_score": 0.0354,
+    "event_impact": 0.038,
+    "historical_avg": 0.3137
+  },
+  "model_type": "RandomForestRegressor",
+  "location": "Casablanca, Morocco",
+  "training_date": "2025-06-01T17:11:26.202753"
+}
