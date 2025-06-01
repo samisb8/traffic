@@ -40,7 +40,7 @@ jobs:
         from mlops.train import generate_synthetic_data
         
         # Generate/load data
-        df = generate_synthetic_data()
+        df = generate_casablanca_traffic_data()
         
         # Quality checks
         missing_pct = df.isnull().sum().sum() / (len(df) * len(df.columns))
