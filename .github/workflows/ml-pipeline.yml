@@ -90,7 +90,7 @@ jobs:
     - name: Train new model
       id: train
       run: |
-        python mlops/train.py --production --regenerate
+        python mlops/train.py --regenerate
         
         # Extract metrics
         python -c "
