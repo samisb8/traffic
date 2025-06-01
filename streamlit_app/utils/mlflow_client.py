@@ -1,8 +1,9 @@
+import os
+from datetime import datetime
+
 import mlflow
 import pandas as pd
 from mlflow.tracking import MlflowClient as MLflowTrackingClient
-import os
-from datetime import datetime
 
 
 class MLflowClient:
@@ -15,10 +16,7 @@ class MLflowClient:
         """Récupère toutes les expériences"""
         try:
             experiments = self.client.search_experiments()
-            return [
-                {"name": exp.name, "id": exp.experiment_id}
-                for exp in experiments
-            ]
+            return [{"name": exp.name, "id": exp.experiment_id} for exp in experiments]
         except Exception as e:
             print(f"Erreur récupération expériences: {e}")
             return []
@@ -33,7 +31,7 @@ class MLflowClient:
             runs = mlflow.search_runs(
                 experiment_ids=[experiment.experiment_id],
                 max_results=max_results,
-                order_by=["start_time DESC"]
+                order_by=["start_time DESC"],
             )
             return runs
         except Exception as e:
@@ -49,7 +47,7 @@ class MLflowClient:
                 "metrics": dict(run.data.metrics),
                 "status": run.info.status,
                 "start_time": run.info.start_time,
-                "end_time": run.info.end_time
+                "end_time": run.info.end_time,
             }
         except Exception as e:
             print(f"Erreur détails run: {e}")
@@ -59,10 +57,7 @@ class MLflowClient:
         """Récupère les versions d'un modèle"""
         try:
             versions = self.client.search_model_versions(f"name='{model_name}'")
-            return [
-                {"version": v.version, "stage": v.current_stage}
-                for v in versions
-            ]
+            return [{"version": v.version, "stage": v.current_stage} for v in versions]
         except Exception as e:
             print(f"Erreur versions modèle: {e}")
             return []
@@ -70,10 +65,7 @@ class MLflowClient:
     def get_latest_model(self, model_name="CasablancaTrafficModel", stage="Production"):
         """Récupère le dernier modèle en production"""
         try:
-            model_version = self.client.get_latest_versions(
-                model_name,
-                stages=[stage]
-            )
+            model_version = self.client.get_latest_versions(model_name, stages=[stage])
             if model_version:
                 return model_version[0]
             return None
@@ -89,17 +81,19 @@ class MLflowClient:
                 return {}
 
             metrics_summary = {}
-            metric_columns = [col for col in runs_df.columns if col.startswith('metrics.')]
-            
+            metric_columns = [
+                col for col in runs_df.columns if col.startswith("metrics.")
+            ]
+
             for metric_col in metric_columns:
-                metric_name = metric_col.replace('metrics.', '')
+                metric_name = metric_col.replace("metrics.", "")
                 values = runs_df[metric_col].dropna()
                 if not values.empty:
                     metrics_summary[metric_name] = {
-                        'best': float(values.max()),
-                        'worst': float(values.min()),
-                        'average': float(values.mean()),
-                        'latest': float(values.iloc[0]) if len(values) > 0 else 0.0
+                        "best": float(values.max()),
+                        "worst": float(values.min()),
+                        "average": float(values.mean()),
+                        "latest": float(values.iloc[0]) if len(values) > 0 else 0.0,
                     }
 
             return metrics_summary

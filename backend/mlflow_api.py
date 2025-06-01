@@ -1,14 +1,16 @@
-from fastapi import APIRouter, HTTPException
-import mlflow
-from mlflow.tracking import MlflowClient
-import pandas as pd
 from typing import Dict, List, Optional
+
+import mlflow
+import pandas as pd
+from fastapi import APIRouter, HTTPException
+from mlflow.tracking import MlflowClient
 
 router = APIRouter(prefix="/mlflow", tags=["mlflow"])
 
 # Configuration MLflow
 mlflow.set_tracking_uri("http://localhost:5000")
 client = MlflowClient()
+
 
 @router.get("/experiments")
 async def get_experiments():
@@ -19,12 +21,13 @@ async def get_experiments():
             {
                 "id": exp.experiment_id,
                 "name": exp.name,
-                "lifecycle_stage": exp.lifecycle_stage
+                "lifecycle_stage": exp.lifecycle_stage,
             }
             for exp in experiments
         ]
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erreur MLflow: {str(e)}")
+
 
 @router.get("/experiments/{experiment_name}/runs")
 async def get_runs(experiment_name: str, limit: int = 10):
@@ -33,19 +36,20 @@ async def get_runs(experiment_name: str, limit: int = 10):
         experiment = mlflow.get_experiment_by_name(experiment_name)
         if not experiment:
             raise HTTPException(status_code=404, detail="Expérience non trouvée")
-        
+
         runs_df = mlflow.search_runs(
             experiment_ids=[experiment.experiment_id],
             max_results=limit,
-            order_by=["start_time DESC"]
+            order_by=["start_time DESC"],
         )
-        
+
         if runs_df.empty:
             return []
-        
-        return runs_df.to_dict(orient='records')
+
+        return runs_df.to_dict(orient="records")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erreur: {str(e)}")
+
 
 @router.get("/runs/{run_id}")
 async def get_run_details(run_id: str):
@@ -59,10 +63,11 @@ async def get_run_details(run_id: str):
             "end_time": run.info.end_time,
             "params": dict(run.data.params),
             "metrics": dict(run.data.metrics),
-            "tags": dict(run.data.tags)
+            "tags": dict(run.data.tags),
         }
     except Exception as e:
         raise HTTPException(status_code=404, detail="Run non trouvé")
+
 
 @router.get("/models")
 async def get_models():
@@ -73,12 +78,15 @@ async def get_models():
             {
                 "name": model.name,
                 "description": model.description,
-                "latest_version": model.latest_versions[0].version if model.latest_versions else None
+                "latest_version": (
+                    model.latest_versions[0].version if model.latest_versions else None
+                ),
             }
             for model in models
         ]
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erreur: {str(e)}")
+
 
 @router.get("/models/{model_name}/versions")
 async def get_model_versions(model_name: str):
@@ -90,21 +98,20 @@ async def get_model_versions(model_name: str):
                 "version": version.version,
                 "stage": version.current_stage,
                 "status": version.status,
-                "run_id": version.run_id
+                "run_id": version.run_id,
             }
             for version in versions
         ]
     except Exception as e:
         raise HTTPException(status_code=404, detail="Modèle non trouvé")
 
+
 @router.post("/models/{model_name}/promote/{version}")
 async def promote_model(model_name: str, version: str, stage: str = "Production"):
     """Promeut un modèle vers un stage"""
     try:
         client.transition_model_version_stage(
-            name=model_name,
-            version=version,
-            stage=stage
+            name=model_name, version=version, stage=stage
         )
         return {"message": f"Modèle {model_name} v{version} promu vers {stage}"}
     except Exception as e:
