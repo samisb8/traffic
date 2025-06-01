@@ -65,7 +65,7 @@ jobs:
         python mlops/monitor.py
         echo "✅ Data drift check completed"
 
-  model-training:
+    model-training:
     needs: data-validation
     runs-on: ubuntu-latest
     if: needs.data-validation.outputs.data-quality > '0.8'
