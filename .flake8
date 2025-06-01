@@ -1,0 +1,20 @@
+﻿[flake8]
+max-line-length = 120
+ignore = 
+    E203,W503,    # Black compatibility
+    F401,F841,    # Unused imports/variables  
+    F821,         # Undefined names (temporaire)
+    E501,         # Line too long
+    E303,         # Too many blank lines
+    F811,F541     # Redefined unused, f-string issues
+exclude = 
+    .git,
+    __pycache__,
+    .venv,
+    data,
+    mlflow-artifacts,
+    mlruns,
+    *.egg-info
+per-file-ignores =
+    __init__.py:F401
+    */migrations/*:*
