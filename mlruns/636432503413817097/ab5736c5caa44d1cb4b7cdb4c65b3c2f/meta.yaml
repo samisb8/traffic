@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/636432503413817097/ab5736c5caa44d1cb4b7cdb4c65b3c2f/artifacts
+end_time: 1748800426991
+entry_point_name: ''
+experiment_id: '636432503413817097'
+lifecycle_stage: active
+run_id: ab5736c5caa44d1cb4b7cdb4c65b3c2f
+run_name: traffic_regressor_NeuralNetwork_20250601_185334
+run_uuid: ab5736c5caa44d1cb4b7cdb4c65b3c2f
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1748800414931
+status: 3
+tags: []
+user_id: USER

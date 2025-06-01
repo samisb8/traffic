@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1748800451258
+current_stage: None
+description: null
+last_updated_timestamp: 1748800451258
+name: Casablanca_Zone_HayHassani
+run_id: f39a75f9106d42f5a8afe06eca9362b3
+run_link: null
+source: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/529577663665800124/f39a75f9106d42f5a8afe06eca9362b3/artifacts/zone_model
+status: READY
+status_message: null
+storage_location: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/529577663665800124/f39a75f9106d42f5a8afe06eca9362b3/artifacts/zone_model
+user_id: null
+version: 1

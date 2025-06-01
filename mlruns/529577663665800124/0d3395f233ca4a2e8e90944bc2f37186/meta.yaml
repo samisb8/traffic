@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/529577663665800124/0d3395f233ca4a2e8e90944bc2f37186/artifacts
+end_time: 1748800437447
+entry_point_name: ''
+experiment_id: '529577663665800124'
+lifecycle_stage: active
+run_id: 0d3395f233ca4a2e8e90944bc2f37186
+run_name: zone_Maarif_20250601_185352
+run_uuid: 0d3395f233ca4a2e8e90944bc2f37186
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1748800432601
+status: 3
+tags: []
+user_id: USER

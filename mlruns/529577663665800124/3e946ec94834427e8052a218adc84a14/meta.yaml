@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/529577663665800124/3e946ec94834427e8052a218adc84a14/artifacts
+end_time: 1748800442137
+entry_point_name: ''
+experiment_id: '529577663665800124'
+lifecycle_stage: active
+run_id: 3e946ec94834427e8052a218adc84a14
+run_name: zone_Anfa_20250601_185357
+run_uuid: 3e946ec94834427e8052a218adc84a14
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1748800437464
+status: 3
+tags: []
+user_id: USER

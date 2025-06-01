@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1748800446528
+current_stage: None
+description: null
+last_updated_timestamp: 1748800446528
+name: Casablanca_Zone_SidiBernoussi
+run_id: bcae5a18cd37494aaca70dd1aefd1810
+run_link: null
+source: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/529577663665800124/bcae5a18cd37494aaca70dd1aefd1810/artifacts/zone_model
+status: READY
+status_message: null
+storage_location: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/529577663665800124/bcae5a18cd37494aaca70dd1aefd1810/artifacts/zone_model
+user_id: null
+version: 1

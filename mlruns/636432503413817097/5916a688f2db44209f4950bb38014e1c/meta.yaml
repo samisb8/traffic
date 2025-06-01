@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/636432503413817097/5916a688f2db44209f4950bb38014e1c/artifacts
+end_time: 1748800409096
+entry_point_name: ''
+experiment_id: '636432503413817097'
+lifecycle_stage: active
+run_id: 5916a688f2db44209f4950bb38014e1c
+run_name: traffic_regressor_LightGBM_20250601_185322
+run_uuid: 5916a688f2db44209f4950bb38014e1c
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1748800402300
+status: 3
+tags: []
+user_id: USER

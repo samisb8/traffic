@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1748800455985
+current_stage: None
+description: null
+last_updated_timestamp: 1748800455985
+name: Casablanca_Zone_AinSebaa
+run_id: 9cc4599b24764f62beddf5531c437f02
+run_link: null
+source: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/529577663665800124/9cc4599b24764f62beddf5531c437f02/artifacts/zone_model
+status: READY
+status_message: null
+storage_location: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/529577663665800124/9cc4599b24764f62beddf5531c437f02/artifacts/zone_model
+user_id: null
+version: 1

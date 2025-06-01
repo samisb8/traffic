@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1748800437375
+current_stage: None
+description: null
+last_updated_timestamp: 1748800437375
+name: Casablanca_Zone_Maarif
+run_id: 0d3395f233ca4a2e8e90944bc2f37186
+run_link: null
+source: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/529577663665800124/0d3395f233ca4a2e8e90944bc2f37186/artifacts/zone_model
+status: READY
+status_message: null
+storage_location: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/529577663665800124/0d3395f233ca4a2e8e90944bc2f37186/artifacts/zone_model
+user_id: null
+version: 1

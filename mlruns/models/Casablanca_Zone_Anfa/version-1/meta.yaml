@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1748800442062
+current_stage: None
+description: null
+last_updated_timestamp: 1748800442062
+name: Casablanca_Zone_Anfa
+run_id: 3e946ec94834427e8052a218adc84a14
+run_link: null
+source: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/529577663665800124/3e946ec94834427e8052a218adc84a14/artifacts/zone_model
+status: READY
+status_message: null
+storage_location: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/529577663665800124/3e946ec94834427e8052a218adc84a14/artifacts/zone_model
+user_id: null
+version: 1

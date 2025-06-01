@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/529577663665800124/bcae5a18cd37494aaca70dd1aefd1810/artifacts
+end_time: 1748800446641
+entry_point_name: ''
+experiment_id: '529577663665800124'
+lifecycle_stage: active
+run_id: bcae5a18cd37494aaca70dd1aefd1810
+run_name: zone_Sidi_Bernoussi_20250601_185402
+run_uuid: bcae5a18cd37494aaca70dd1aefd1810
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1748800442158
+status: 3
+tags: []
+user_id: USER

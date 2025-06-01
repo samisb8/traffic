@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/529577663665800124/90f837028ccd403e9166d064e87cb69f/artifacts
+end_time: 1748800432583
+entry_point_name: ''
+experiment_id: '529577663665800124'
+lifecycle_stage: active
+run_id: 90f837028ccd403e9166d064e87cb69f
+run_name: zone_Centre_Ville_20250601_185347
+run_uuid: 90f837028ccd403e9166d064e87cb69f
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1748800427906
+status: 3
+tags: []
+user_id: USER

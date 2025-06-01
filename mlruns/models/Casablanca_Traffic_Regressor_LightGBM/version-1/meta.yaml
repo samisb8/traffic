@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1748800409052
+current_stage: None
+description: null
+last_updated_timestamp: 1748800409052
+name: Casablanca_Traffic_Regressor_LightGBM
+run_id: 5916a688f2db44209f4950bb38014e1c
+run_link: null
+source: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/636432503413817097/5916a688f2db44209f4950bb38014e1c/artifacts/traffic_regressor_model
+status: READY
+status_message: null
+storage_location: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/636432503413817097/5916a688f2db44209f4950bb38014e1c/artifacts/traffic_regressor_model
+user_id: null
+version: 1

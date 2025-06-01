@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1748800414871
+current_stage: None
+description: null
+last_updated_timestamp: 1748800414871
+name: Casablanca_Traffic_Regressor_GradientBoosting
+run_id: 672acd93b17b408ebb4b0f9db54bd200
+run_link: null
+source: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/636432503413817097/672acd93b17b408ebb4b0f9db54bd200/artifacts/traffic_regressor_model
+status: READY
+status_message: null
+storage_location: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/636432503413817097/672acd93b17b408ebb4b0f9db54bd200/artifacts/traffic_regressor_model
+user_id: null
+version: 1

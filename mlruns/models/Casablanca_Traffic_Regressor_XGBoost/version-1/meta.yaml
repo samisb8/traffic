@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1748800402237
+current_stage: None
+description: null
+last_updated_timestamp: 1748800402237
+name: Casablanca_Traffic_Regressor_XGBoost
+run_id: 57938436052e45d5b32fabc331c4e1bb
+run_link: null
+source: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/636432503413817097/57938436052e45d5b32fabc331c4e1bb/artifacts/traffic_regressor_model
+status: READY
+status_message: null
+storage_location: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/636432503413817097/57938436052e45d5b32fabc331c4e1bb/artifacts/traffic_regressor_model
+user_id: null
+version: 1

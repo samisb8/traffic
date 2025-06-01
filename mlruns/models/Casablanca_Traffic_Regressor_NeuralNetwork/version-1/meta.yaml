@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1748800426949
+current_stage: None
+description: null
+last_updated_timestamp: 1748800426949
+name: Casablanca_Traffic_Regressor_NeuralNetwork
+run_id: ab5736c5caa44d1cb4b7cdb4c65b3c2f
+run_link: null
+source: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/636432503413817097/ab5736c5caa44d1cb4b7cdb4c65b3c2f/artifacts/traffic_regressor_model
+status: READY
+status_message: null
+storage_location: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/636432503413817097/ab5736c5caa44d1cb4b7cdb4c65b3c2f/artifacts/traffic_regressor_model
+user_id: null
+version: 1

@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/636432503413817097/57938436052e45d5b32fabc331c4e1bb/artifacts
+end_time: 1748800402286
+entry_point_name: ''
+experiment_id: '636432503413817097'
+lifecycle_stage: active
+run_id: 57938436052e45d5b32fabc331c4e1bb
+run_name: traffic_regressor_XGBoost_20250601_185317
+run_uuid: 57938436052e45d5b32fabc331c4e1bb
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1748800397158
+status: 3
+tags: []
+user_id: USER

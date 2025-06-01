@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1748800432487
+current_stage: None
+description: null
+last_updated_timestamp: 1748800432487
+name: Casablanca_Zone_CentreVille
+run_id: 90f837028ccd403e9166d064e87cb69f
+run_link: null
+source: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/529577663665800124/90f837028ccd403e9166d064e87cb69f/artifacts/zone_model
+status: READY
+status_message: null
+storage_location: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/529577663665800124/90f837028ccd403e9166d064e87cb69f/artifacts/zone_model
+user_id: null
+version: 1

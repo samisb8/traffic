@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/USER/Desktop/mlops-trafficflow/mlruns/636432503413817097/adf5daa76ba443809f3c71ae6f2ec994/artifacts
+end_time: 1748800427791
+entry_point_name: ''
+experiment_id: '636432503413817097'
+lifecycle_stage: active
+run_id: adf5daa76ba443809f3c71ae6f2ec994
+run_name: anomaly_detector_IsolationForest_20250601_185347
+run_uuid: adf5daa76ba443809f3c71ae6f2ec994
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1748800427213
+status: 3
+tags: []
+user_id: USER
