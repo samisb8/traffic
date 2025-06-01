@@ -2,7 +2,6 @@ import time
 from collections import deque
 
 
-
 class ModelMonitor:
     def __init__(self):
         self.predictions_log = deque(maxlen=1000)
