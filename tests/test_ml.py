@@ -7,7 +7,7 @@ import joblib
 
 def test_traffic_predictor():
     """Test du prédicteur de trafic"""
-    from streamlit_app.backend.predictor import TrafficPredictor
+    from backend.predictor import TrafficPredictor
     
     predictor = TrafficPredictor()
     assert predictor.is_loaded()
@@ -21,7 +21,7 @@ def test_traffic_predictor():
 
 def test_model_monitor():
     """Test du monitoring de modèle"""
-    from streamlit_app.backend.monitor import ModelMonitor
+    from backend.monitor import ModelMonitor
     
     monitor = ModelMonitor()
     

@@ -34,5 +34,5 @@ def sample_traffic_data():
 def api_client():
     """Client de test pour l'API"""
     from fastapi.testclient import TestClient
-    from streamlit_app.backend.main import app
+    from backend.main import app
     return TestClient(app)

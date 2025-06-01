@@ -1,6 +1,6 @@
 import pytest
 from fastapi.testclient import TestClient
-from streamlit_app.backend.main import app
+from backend.main import app
 
 client = TestClient(app)
 

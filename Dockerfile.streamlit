@@ -2,20 +2,29 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install dependencies
+# Install system dependencies (curl needed for health check)
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements and install dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY streamlit_app/ ./streamlit_app/
 COPY data/ ./data/
 
+# Set Python path for imports
+ENV PYTHONPATH=/app
+
 # Expose port
 EXPOSE 8501
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+# Health check with longer start period for Streamlit
+HEALTHCHECK --interval=30s --timeout=15s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:8501/_stcore/health || exit 1
 
-# Run Streamlit
-CMD ["streamlit", "run", "streamlit_app/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+# Run Streamlit with python -m to ensure proper PATH
+CMD ["python", "-m", "streamlit", "run", "streamlit_app/app.py", "--server.port=8501", "--server.address=0.0.0.0", "--server.headless=true", "--server.enableCORS=false"]
