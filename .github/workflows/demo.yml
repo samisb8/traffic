@@ -1,0 +1,178 @@
+name: MLOps TrafficFlow CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - staging
+        - production
+
+env:
+  PYTHON_VERSION: '3.9'
+  DOCKER_IMAGE_NAME: mlops-trafficflow
+  DOCKERHUB_USERNAME: ${{ secrets.sam15412 }}
+  DOCKERHUB_TOKEN: ${{ secrets.dckr_pat_F6YGZ4oxCi1Leiyop1Lr0873DqU }}
+  MODEL_VERSION: $(date +%Y%m%d%H%M%S)
+
+jobs:
+  test:
+    name: Test Application
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov
+    
+    - name: Run unit tests
+      run: |
+        pytest tests/ --cov=./ --cov-report=xml --cov-report=html
+      
+    - name: Upload coverage report
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./coverage.xml
+        flags: unittests
+
+  train-model:
+    name: Train and Validate Model
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Install ML dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install scikit-learn pandas numpy joblib mlflow
+    
+    - name: Train model
+      run: |
+        python mlops/train.py
+        
+    - name: Validate model metrics
+      id: validate
+      run: |
+        python mlops/validate_model.py
+        echo "MODEL_VALID=$(cat model_validation_result.txt)" >> $GITHUB_OUTPUT
+    
+    - name: Upload model artifacts
+      if: steps.validate.outputs.MODEL_VALID == 'true'
+      uses: actions/upload-artifact@v3
+      with:
+        name: model-artifacts-${{ env.MODEL_VERSION }}
+        path: |
+          data/model.pkl
+          data/model_metrics.json
+          mlops/training_report.html
+          coverage-report/
+
+  deploy:
+    name: Deploy Application
+    needs: train-model
+    if: needs.train-model.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Download model artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: model-artifacts-${{ env.MODEL_VERSION }}
+        path: data/
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ env.DOCKERHUB_USERNAME }}
+        password: ${{ env.DOCKERHUB_TOKEN }}
+    
+    - name: Build and push Docker image
+      run: |
+        docker buildx build \
+          --platform linux/amd64,linux/arm64 \
+          -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.MODEL_VERSION }} \
+          -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:latest \
+          --push .
+    
+    - name: Deploy to environment
+      run: |
+        case "${{ github.event.inputs.environment }}" in
+          staging)
+            echo "Deploying to staging..."
+            # kubectl apply -f k8s/staging.yaml
+            ;;
+          production)
+            echo "Deploying to production..."
+            # kubectl apply -f k8s/production.yaml
+            ;;
+        esac
+        
+    - name: Notify Slack
+      uses: slackapi/slack-github-action@v1.23.0
+      with:
+        channel-id: 'mlops-notifications'
+        slack-message: |
+          MLOps TrafficFlow v${{ env.MODEL_VERSION }} deployed to ${{ github.event.inputs.environment }}!
+          Commit: ${{ github.sha }}
+          By: ${{ github.actor }}
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+  monitor:
+    name: Monitor Deployment
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Run smoke tests
+      run: |
+        python tests/smoke_tests.py --environment ${{ github.event.inputs.environment }}
+        
+    - name: Check initial model performance
+      run: |
+        python mlops/monitor.py \
+          --initial-check \
+          --environment ${{ github.event.inputs.environment }} \
+          --model-version ${{ env.MODEL_VERSION }}
+    
+    - name: Upload monitoring report
+      uses: actions/upload-artifact@v3
+      with:
+        name: monitoring-report-${{ env.MODEL_VERSION }}
+        path: mlops/monitoring_report.json
