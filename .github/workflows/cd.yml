@@ -31,10 +31,10 @@ jobs:
         echo "✅ Pre-deployment validation passed"
     
     - name: Deploy to staging
-        run: |
-          echo "🚀 Deployment simulation completed"
-          echo "✅ Staging environment ready"
-          echo "📊 Application available for testing"
+      run: |
+        echo "🚀 Deployment simulation completed"
+        echo "✅ Staging environment ready"
+        echo "📊 Application available for testing"
     
     - name: Health check staging
       run: |
