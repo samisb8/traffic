@@ -1,7 +1,5 @@
-from typing import Dict, List, Optional
 
 import mlflow
-import pandas as pd
 from fastapi import APIRouter, HTTPException
 from mlflow.tracking import MlflowClient
 

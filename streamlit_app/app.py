@@ -1,10 +1,6 @@
-import json
 import random
 import time
-from datetime import datetime
 
-import numpy as np
-import pandas as pd
 import plotly.graph_objects as go
 import requests
 import streamlit as st
@@ -279,7 +275,7 @@ class MultiRouteClient:
                     name = step.get("name", "")
                     if name and name not in roads:
                         roads.append(name)
-        except:
+        except Exception:
             pass
 
         return roads[:5]  # Limiter à 5 rues principales
@@ -292,7 +288,7 @@ class MultiRouteClient:
                 name = instruction.get("street_name", "")
                 if name and name not in roads:
                     roads.append(name)
-        except:
+        except Exception:
             pass
 
         return roads[:5]
@@ -564,7 +560,7 @@ def show_sidebar():
 
             if status == "available":
                 st.markdown(
-                    f"""
+                    """
                 <div class="api-status api-success">
                     ✅ {api_name.upper()}: Disponible
                 </div>
@@ -573,7 +569,7 @@ def show_sidebar():
                 )
             elif status == "error":
                 st.markdown(
-                    f"""
+                    """
                 <div class="api-status api-error">
                     ❌ {api_name.upper()}: Indisponible
                 </div>
@@ -582,7 +578,7 @@ def show_sidebar():
                 )
             else:
                 st.markdown(
-                    f"""
+                    """
                 <div class="api-status api-warning">
                     ❓ {api_name.upper()}: Non testé
                 </div>
@@ -606,7 +602,7 @@ def show_selected_vehicle_sidebar():
 
     vehicle = st.session_state.selected_vehicle
     st.markdown(
-        f"""
+        """
     <div class="vehicle-selected">
         <strong>{vehicle['id']}</strong> - {vehicle['driver']}<br>
         📍 {vehicle['location']}<br>
@@ -913,21 +909,21 @@ def show_real_calculated_routes():
 
             with action_col1:
                 if st.button(
-                    f"🎯 Choisir Route", key=f"choose_{i}", use_container_width=True
+                    "🎯 Choisir Route", key=f"choose_{i}", use_container_width=True
                 ):
                     st.balloons()
-                    st.success(f"🚀 Navigation activée!")
+                    st.success("🚀 Navigation activée!")
                     show_turn_by_turn_directions(route)
 
             with action_col2:
                 if st.button(
-                    f"📊 Analyser", key=f"analyze_{i}", use_container_width=True
+                    "📊 Analyser", key=f"analyze_{i}", use_container_width=True
                 ):
                     show_detailed_route_analysis(route)
 
             with action_col3:
                 if st.button(
-                    f"🗺️ Export GPS", key=f"export_{i}", use_container_width=True
+                    "🗺️ Export GPS", key=f"export_{i}", use_container_width=True
                 ):
                     export_route_gpx(route)
 
@@ -941,7 +937,7 @@ def show_turn_by_turn_directions(route):
 
         # Instructions basées sur les rues réelles
         instructions = [
-            f"🚀 **Départ** depuis votre position actuelle",
+            "🚀 **Départ** depuis votre position actuelle",
             f"➡️ **Suivez** {route['source']} pendant {route['distance']} km",
         ]
 
@@ -956,7 +952,7 @@ def show_turn_by_turn_directions(route):
         instructions.extend(
             [
                 f"⏱️ **Durée totale estimée:** {route['duration']} minutes",
-                f"🎯 **Arrivée** à destination",
+                "🎯 **Arrivée** à destination",
             ]
         )
 

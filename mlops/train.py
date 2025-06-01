@@ -1,13 +1,10 @@
 import argparse
-import json
 from datetime import datetime, timedelta
 from pathlib import Path
 
 import joblib
 import mlflow
 import mlflow.sklearn
-import numpy as np
-import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, r2_score
 from sklearn.model_selection import train_test_split
@@ -265,7 +262,7 @@ def train_model(test_mode=False):
     df = load_data()
 
     print(f"📊 Dataset chargé: {len(df)} échantillons")
-    print(f"📈 Statistiques trafic:")
+    print("📈 Statistiques trafic:")
     print(f"   Minimum: {df['traffic_level'].min():.3f}")
     print(f"   Maximum: {df['traffic_level'].max():.3f}")
     print(f"   Moyenne: {df['traffic_level'].mean():.3f}")
@@ -283,7 +280,7 @@ def train_model(test_mode=False):
     y = df["traffic_level"]
 
     # Vérification données
-    print(f"🔍 Vérification données:")
+    print("🔍 Vérification données:")
     print(f"   Features shape: {X.shape}")
     print(f"   Target shape: {y.shape}")
     print(f"   Valeurs manquantes: {X.isnull().sum().sum()}")
@@ -351,11 +348,11 @@ def train_model(test_mode=False):
         "training_date": datetime.now().isoformat(),
     }
 
-    print(f"\n📊 Résultats d'entraînement:")
+    print("\n📊 Résultats d'entraînement:")
     print(f"   🎯 Accuracy Test: {accuracy_test:.4f} ({accuracy_test*100:.1f}%)")
     print(f"   📉 MAE Test: {mae_test:.4f}")
     print(f"   📈 R² Test: {r2_test:.4f}")
-    print(f"\n🔧 Importance des features:")
+    print("\n🔧 Importance des features:")
     for feature, importance in sorted(
         feature_importance.items(), key=lambda x: x[1], reverse=True
     ):
@@ -377,7 +374,7 @@ def train_model(test_mode=False):
         json.dump(metrics, f, indent=2)
 
     print(f"\n💾 Modèle sauvé: {model_path}")
-    print(f"📋 Métriques sauvées: data/model_metrics.json")
+    print("📋 Métriques sauvées: data/model_metrics.json")
 
     # ========== AJOUT MLFLOW TRACKING ==========
     try:

@@ -1,10 +1,7 @@
-import json
 from datetime import datetime, timedelta
 from pathlib import Path
 
 import mlflow
-import numpy as np
-import pandas as pd
 import requests
 
 
@@ -85,7 +82,7 @@ def check_model_performance():
             api_metrics = response.json()
             print("✅ Métriques récupérées depuis l'API")
             return api_metrics
-    except:
+    except Exception:
         print("⚠️ API non accessible, utilisation métriques locales")
 
     # Fallback: métriques locales
@@ -108,7 +105,7 @@ def generate_monitoring_report():
     try:
         while mlflow.active_run():
             mlflow.end_run()
-    except:
+    except Exception:
         pass
 
     # S'assurer qu'on est dans la bonne expérience
@@ -203,7 +200,7 @@ if __name__ == "__main__":
     try:
         while mlflow.active_run():
             mlflow.end_run()
-    except:
+    except Exception:
         pass
 
     # Exécution du monitoring

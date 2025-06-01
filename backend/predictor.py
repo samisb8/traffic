@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import joblib
-import numpy as np
 
 
 class TrafficPredictor:
@@ -50,7 +49,7 @@ class TrafficPredictor:
             raw_pred = self.model.predict(data)
             normalized = (raw_pred - raw_pred.min()) / (raw_pred.max() - raw_pred.min())
             return np.clip(normalized, 0, 1)
-        except:
+        except Exception:
             return np.array([0.5, 0.7, 0.3, 0.8])
 
     def is_loaded(self):

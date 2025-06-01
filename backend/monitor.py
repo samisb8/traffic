@@ -1,7 +1,6 @@
 import time
 from collections import deque
 
-import numpy as np
 
 
 class ModelMonitor:

@@ -1,6 +1,4 @@
-import json
 import shutil
-from datetime import datetime
 from pathlib import Path
 
 import joblib
@@ -52,7 +50,7 @@ def compare_models():
     new_accuracy = new_metrics.get("accuracy", 0)
     prod_accuracy = prod_metrics.get("accuracy", 0)
 
-    print(f"📊 Comparaison modèles:")
+    print("📊 Comparaison modèles:")
     print(f"   Nouveau: {new_accuracy:.4f}")
     print(f"   Production: {prod_accuracy:.4f}")
 
@@ -101,7 +99,7 @@ def log_model_to_mlflow(model_path, metrics):
                 ):
                     try:
                         mlflow.log_metric(metric_name, value)
-                    except:
+                    except Exception:
                         pass  # Ignorer les erreurs de métriques
 
             # Vérifier que le modèle existe
@@ -163,7 +161,7 @@ def deploy_model():
         return False
 
     # Afficher info du nouveau modèle
-    print(f"📊 Nouveau modèle détecté:")
+    print("📊 Nouveau modèle détecté:")
     print(f"   Type: {new_metrics.get('model_type', 'Unknown')}")
     print(f"   Accuracy: {new_metrics.get('accuracy', 0):.4f}")
     print(f"   Entraîné le: {new_metrics.get('training_date', 'Unknown')}")

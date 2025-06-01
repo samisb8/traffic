@@ -8,8 +8,6 @@ import time
 from datetime import datetime, timedelta
 from pathlib import Path
 
-import numpy as np
-import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
@@ -161,23 +159,23 @@ def show():
             border-color: #f44336;
             background: #ffebee;
         }
-        .alert-danger { 
-            background-color: #ffebee; 
-            border-left: 4px solid #f44336; 
-            padding: 10px; 
-            border-radius: 5px;
-            margin: 5px 0;
-        }
-        .alert-warning { 
-            background-color: #fff8e1; 
-            border-left: 4px solid #ff9800; 
+        .alert-danger {
+            background-color: #ffebee;
+            border-left: 4px solid #f44336;
             padding: 10px;
             border-radius: 5px;
             margin: 5px 0;
         }
-        .alert-success { 
-            background-color: #e8f5e8; 
-            border-left: 4px solid #4caf50; 
+        .alert-warning {
+            background-color: #fff8e1;
+            border-left: 4px solid #ff9800;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+        .alert-success {
+            background-color: #e8f5e8;
+            border-left: 4px solid #4caf50;
             padding: 10px;
             border-radius: 5px;
             margin: 5px 0;
@@ -351,7 +349,7 @@ def show_selected_vehicle_dashboard():
     vehicle = st.session_state.selected_vehicle
 
     st.markdown(
-        f"""
+        """
     <div class="vehicle-info">
         <h4>🚗 Véhicule Sélectionné: {vehicle['id']}</h4>
         <div style="display: flex; justify-content: space-between;">
@@ -458,14 +456,14 @@ def show_integrated_route_calculation(
 
                 with action_col1:
                     if st.button(
-                        f"🎯 Choisir", key=f"dash_route_{i}", use_container_width=True
+                        "🎯 Choisir", key=f"dash_route_{i}", use_container_width=True
                     ):
                         st.balloons()
                         st.success(f"🚀 Route sélectionnée: {route['name']}")
 
                 with action_col2:
                     if st.button(
-                        f"📍 Voir détails",
+                        "📍 Voir détails",
                         key=f"dash_detail_{i}",
                         use_container_width=True,
                     ):
@@ -963,7 +961,7 @@ def show_integrated_incidents():
         ]
 
         st.markdown(
-            f"""
+            """
         <div class="{severity_style}">
             <strong>{severity_icon} {road_name}</strong><br>
             {incident['type']} - Délai: +{incident['delay']} min
@@ -994,7 +992,7 @@ def show_ml_predictions_summary():
     """Résumé des prédictions ML"""
 
     # Prédictions par zone
-    zones = ["Centre-ville", "Maarif", "Anfa", "Corniche"]
+    zones = ["Centre-ville", "Maari", "Anfa", "Corniche"]
     predictions = [random.uniform(0.3, 0.9) for _ in zones]
 
     st.markdown("#### 🔮 Prédictions 30min")

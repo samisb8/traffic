@@ -1,12 +1,9 @@
 # =====================================
 # 📊 streamlit_app/pages/ml_monitoring.py
 # =====================================
-import os
 import sys
 from datetime import datetime, timedelta
 
-import numpy as np
-import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
@@ -144,7 +141,7 @@ def ml_monitoring_page():
                 drift_score = 0.15 + np.random.uniform(-0.05, 0.05)
                 outliers = np.random.randint(0, 5)
 
-        except:
+        except Exception:
             drift_score = 0.15
             outliers = 2
 

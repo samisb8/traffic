@@ -1,4 +1,3 @@
-import numpy as np
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -42,7 +41,7 @@ def predict():
 
     return {
         "predictions": predictions.tolist(),
-        "zones": ["Centre-ville", "Maarif", "Anfa", "Sidi Bernoussi"],
+        "zones": ["Centre-ville", "Maari", "Anfa", "Sidi Bernoussi"],
         "timestamp": "2024-01-15T10:30:00Z",
     }
 
