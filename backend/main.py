@@ -1,9 +1,9 @@
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from monitor import ModelMonitor
-from predictor import TrafficPredictor
-
+from backend.monitor import ModelMonitor
+from backend.predictor import TrafficPredictor
+import numpy as np
 app = FastAPI(title="Traffic Flow API", version="1.0.0")
 
 app.add_middleware(
